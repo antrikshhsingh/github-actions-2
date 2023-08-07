@@ -1,0 +1,25 @@
+name: Deploy Exercise 1
+on: push
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code from GitHub
+        # given by github itself
+        uses: actions/checkout@v3
+        # this step is not needed already installed on ubuntu
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      # exacr same versions are downloaded
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test Code
+        run: npm run test
+      - name: Build
+        run: npm run build
+      - name: Deploy
+        run: echo "Deploying!"
