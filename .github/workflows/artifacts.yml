@@ -1,9 +1,15 @@
+# ARTIFACTS ARE NOTHING BUT FILES THAT ARE CREATED DURING THE WORKFLOW RUN OR WHEN A BUILD SCRIPT IS RUN
+
+# The files that are created when we run the build script are called artifacts.
+# dist folder files like index.html, main.js, main.css and assets are artifacts.
+
 name: Artifacts Demo
 on:
   push:
     branches:
       - main
 jobs:
+  # JOB 1
   test:
     runs-on: ubuntu-latest
     steps:
@@ -13,6 +19,7 @@ jobs:
         run: npm ci
       - name: Test Code
         run: npm run test
+  # JOB 2
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -26,8 +33,9 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build
+          name: build-files
           path: dist
+  # JOB 3
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -35,8 +43,8 @@ jobs:
       - name: Get artifact
         uses: actions/download-artifact@v3
         with:
-          name: build
+          name: build-files
       - name: List files
-        run: ls -l
+        run: ls
       - name: Deploy
         run: echo "Deploying!"
