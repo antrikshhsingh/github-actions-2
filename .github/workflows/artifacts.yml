@@ -1,0 +1,44 @@
+name: Artifacts Demo
+on:
+  push:
+    branches: [main]
+jobs:
+  test:
+    - name: Get code from GitHub
+      uses: actions/checkout@v3
+    - name: Install dependencies
+      run: npm ci
+    - name: Test Code
+      run: npm run test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code from GitHub
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code from GitHub
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Deploy
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist
+      - name: List files
+        run: ls
+      - name: Deploy
+        run: echo "Deploying!"
