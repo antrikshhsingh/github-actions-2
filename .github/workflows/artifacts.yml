@@ -1,13 +1,18 @@
 name: Artifacts Demo
-on: [push]
+on:
+  push:
+    branches:
+      - main
 jobs:
   test:
-    - name: Get code from GitHub
-      uses: actions/checkout@v3
-    - name: Install dependencies
-      run: npm ci
-    - name: Test Code
-      run: npm run test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code from GitHub
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Test Code
+        run: npm run test
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -18,7 +23,7 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Upload Artifacts
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: build
@@ -27,11 +32,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Get build Artifacts
+      - name: Get artifact
         uses: actions/download-artifact@v3
         with:
           name: build
       - name: List files
-        run: ls
+        run: ls -l
       - name: Deploy
         run: echo "Deploying!"
